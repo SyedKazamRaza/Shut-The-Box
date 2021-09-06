@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <style>
+        body{
+            background: skyblue;
+        }
+        #head{
+            color:red;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        #first{
+            display: inline-block;
+            color: red;
+        }
+        #myname{
+            display: inline;
+            color: red;
+        }
+        .myblue{
+            color: blue;
+        }
+        .btn{
+            border-color: red;
+            background-color: aqua;
+            color: black;
+        }
+
+    </style>
+
+    <script>
+        var sum;
+        var score = 45;
+        function dieRolled()
+        {
+            var x1;
+            if(score <= 6){
+                x1 = Math.floor((Math.random() * 6) + 1);
+                sum = x1;
+                result = x1.toString();
+            }
+            else{
+                x1 = Math.floor((Math.random() * 6) + 1);
+                var x2 = Math.floor((Math.random() * 6) + 1);
+                sum = x1 + x2;
+                result = x1.toString() + " + " + x2.toString() + " = " + sum.toString();
+
+            }
+
+            document.getElementById("showNumbers").innerText = result;
+            document.getElementById("submitSelection").disabled = false;
+            document.getElementById("rollBtn").disabled = true;
+        }
+
+        function SubmitSelection()
+        {
+            var total = 0;
+            if((document.getElementById("1").checked === true) && (document.getElementById("1").disabled === false)){
+                total = total + 1;
+            }
+            if((document.getElementById("2").checked === true) && (document.getElementById("2").disabled === false)){
+                total = total + 2;
+            }
+            if((document.getElementById("3").checked === true) && (document.getElementById("3").disabled === false)  ){
+                total = total + 3;
+            }
+            if((document.getElementById("4").checked === true) && (document.getElementById("4").disabled === false)  ){
+                total = total + 4;
+            }
+            if((document.getElementById("5").checked === true) && (document.getElementById("5").disabled === false)){
+                total = total + 5;
+            }
+            if((document.getElementById("6").checked === true) && (document.getElementById("6").disabled === false) ){
+                total = total + 6;
+            }
+            if((document.getElementById("7").checked === true) && (document.getElementById("7").disabled === false)){
+                total = total + 7;
+            }
+            if((document.getElementById("8").checked === true) && (document.getElementById("8").disabled === false)){
+                total = total + 8;
+            }
+            if((document.getElementById("9").checked === true) && (document.getElementById("9").disabled === false)){
+                total = total + 9;
+            }
+
+            if(total === sum)
+            {
+                alert("Successfull Submission");
+
+                if(document.getElementById("1").checked === true){
+                    document.getElementById("1").disabled = true;
+                }
+                if(document.getElementById("2").checked === true){
+                    document.getElementById("2").disabled = true;
+                }
+                if(document.getElementById("3").checked === true){
+                    document.getElementById("3").disabled = true;
+                }
+                if(document.getElementById("4").checked === true){
+                    document.getElementById("4").disabled = true;
+                }
+                if(document.getElementById("5").checked === true){
+                    document.getElementById("5").disabled = true;
+                }
+                if(document.getElementById("6").checked === true){
+                    document.getElementById("6").disabled = true;
+                }
+                if(document.getElementById("7").checked === true){
+                    document.getElementById("7").disabled = true;
+                }
+                if(document.getElementById("8").checked === true){
+                    document.getElementById("8").disabled = true;
+                }
+                if(document.getElementById("9").checked === true){
+                    document.getElementById("9").disabled = true;
+                }
+
+                score = score - sum;
+                document.getElementById("showNumbers").innerText = "";
+                document.getElementById("submitSelection").disabled = true;
+                document.getElementById("rollBtn").disabled = false;
+            }
+            else{
+                alert("The total of the boxes you selected does not match the dice roll.\n" +
+                    "Please make another selection and try again.\n")
+            }
+        }
+        function endGame() {
+            alert("Your Score is " + score);
+            var nam = document.getElementById("myname").innerText;
+            var reqObj = new XMLHttpRequest();
+            reqObj.open('POST','/submit',true);
+            reqObj.send(JSON.stringify({ username: nam,score: score}));
+
+            reqObj.onreadystatechange = function () {
+                if(reqObj.readyState === 4 && reqObj.status === 200){
+                    {#window.location.pathname = '/redirectToScores';#}
+                    location.replace("/redirectToScores")
+                }
+                else{
+                    console.log("UnsuccessFul Request.");
+                }
+            }
+        }
+
+        function checkValidation()
+        {
+            var nam = document.getElementById("myname").innerHTML;
+            if(typeof nam !== 'string'){
+                location.replace("/checkValidation");
+            }
+        }
+    </script>
+
+</head>
+<body onpageshow="checkValidation()">
+<h2 id="head">Shut the Box</h2>
+<h3 class="myblue">The Rules</h3>
+<ol type="i">
+    <li>Each turn, you roll the dice(or die) and select 1 or more boxes which sum to value of your roll.</li>
+    <li>You will not be allowed to pick the boces which you choose on subsequent turns.</li>
+    <li>When the sum of boxes which are left is less than or equal to 6, you'll only roll a simgle dice.</li>
+    <li>When you cannor make a move or you give up, the sum of the boxes which are left gives your score.</li>
+    <li>Lower scores are better and a score of 0 is called "Shtting the box".</li>
+</ol>
+
+<h3 id="first">Let's Play </h3>
+<h3 id="myname">
+    {{ nm }}
+</h3>
+
+<h3 class="myblue">Dice roll</h3>
+<fieldset>
+    <input type="button" class="btn" value="Roll Dice" id="rollBtn" onclick="dieRolled()">
+    <label>Result:</label>
+    <span id="showNumbers">
+
+    </span>
+</fieldset>
+
+<h3 class="myblue">Box Selection</h3>
+<table>
+    <tr>
+        <th > <label for="1"> 1</label> </th>
+        <th > <label for="2"> 2</label> </th>
+        <th> <label for="3"> 3</label> </th>
+        <th> <label for="4"> 4</label> </th>
+        <th> <label for="5"> 5</label> </th>
+        <th> <label for="6"> 6</label> </th>
+        <th> <label for="7"> 7</label> </th>
+        <th> <label for="8"> 8</label> </th>
+        <th> <label for="9"> 9</label> </th>
+    </tr>
+    <tr>
+        <td> <input type="checkbox" name="1" id="1">    </td>
+        <td> <input type="checkbox" id="2">    </td>
+        <td> <input type="checkbox" id="3">    </td>
+        <td> <input type="checkbox" id="4">    </td>
+        <td> <input type="checkbox" id="5">    </td>
+        <td> <input type="checkbox" id="6">    </td>
+        <td> <input type="checkbox" id="7">    </td>
+        <td> <input type="checkbox" id="8">    </td>
+        <td> <input type="checkbox" id="9">    </td>
+    </tr>
+</table>
+
+<fieldset>
+    <input type="button" class="btn" value="Submit Box Selection" id="submitSelection" onclick="SubmitSelection()" disabled>
+    <input type="button" class="btn" value="I give up I can't make valid move" id="giveup" onclick="endGame()">
+</fieldset>
+<footer>
+    <p class="myblue">@Alessandro, 2020(The year world ended)</p>
+</footer>
+
+
+</body>
+</html>

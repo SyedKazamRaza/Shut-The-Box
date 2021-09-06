@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scores</title>
+
+    <style>
+        body{
+            background-color: lightgreen;
+        }
+        .head{
+            color: red;
+            text-align: center;
+        }
+        .second{
+            color: blue;
+        }
+        #scoresTable{
+            color: red;
+        }
+        .btn{
+            border-color: red;
+            background-color: aqua;
+            color: black;
+        }
+    </style>
+
+    <script>
+        var timer = setInterval(updateRecords, 10000);
+
+        function updateRecords(){
+            document.getElementById("scoresTable").innerHTML ="";
+            var ajaxReq = new XMLHttpRequest();
+            ajaxReq.open("GET", "/fetch", true);
+            ajaxReq.send();
+            ajaxReq.onreadystatechange = function () {
+                if (ajaxReq.readyState === 4 && ajaxReq.status === 200)
+                {
+                    var mytable = document.getElementById("scoresTable");
+                    {#console.log(ajaxReq.responseText);#}
+                    var records = JSON.parse(ajaxReq.responseText);
+                    if(records.length !== 0)
+                    {
+                        for (i = 0; i < records.length; i++) {
+                            var tr_ = document.createElement("tr");
+                            var c_1 = document.createElement("td");
+                            var t1 = document.createTextNode(records[i].username);
+                            var c_2 = document.createElement("td");
+                            var t2 = document.createTextNode(records[i].score);
+                            c_1.append(t1);
+                            c_2.append(t2);
+                            tr_.appendChild(c_1);
+                            tr_.appendChild(c_2);
+                            mytable.appendChild(tr_);
+                        }
+                    }
+                }
+                else{
+                    console.log("Unsuccessful Request");
+                }
+            }
+        }
+
+        function stopUpdating(){
+            clearInterval(timer);
+        }
+        function startUpdating(){
+            timer = setInterval(updateRecords, 10000);
+        }
+
+        function playAgain() {
+            location.replace("/redirectTologin");
+        }
+
+        function showAllScores() {
+            var ajaxReq = new XMLHttpRequest();
+            ajaxReq.open("GET", "/fetch", true);
+            ajaxReq.send();
+            ajaxReq.onreadystatechange = function () {
+                if (ajaxReq.readyState === 4 && ajaxReq.status === 200)
+                {
+                    var mytable = document.getElementById("scoresTable");
+                    var records = JSON.parse(ajaxReq.responseText);
+                    if(records.length !== 0)
+                    {
+                        for (i = 0; i < records.length; i++) {
+                            var tr_ = document.createElement("tr");
+                            var c_1 = document.createElement("td");
+                            var t1 = document.createTextNode(records[i].username);
+                            var c_2 = document.createElement("td");
+                            var t2 = document.createTextNode(records[i].score);
+
+                            c_1.append(t1);
+                            c_2.append(t2);
+
+                            tr_.appendChild(c_1);
+                            tr_.appendChild(c_2);
+
+                            mytable.appendChild(tr_);
+                        }
+                    }
+                }
+                else{
+                    console.log("Unsuccessful Request");
+                }
+            }
+        }
+        function check(){
+            if(typeof status !== 'string'){
+                location.replace("/checkValidation");
+            }
+        }
+
+    </script>
+
+
+</head>
+<body onload="showAllScores(); check()">
+
+<h1 class="head">Shut the Box</h1>
+<h2 class="second">Scores</h2>
+<p>“Well done! Here are the scores so far...”</p>
+<table id="scoresTable" border=0>
+
+</table>
+
+<p id="showScores"></p>
+
+<fieldset>
+    <input type="button" class="btn" value="PLAY AGAIN!!!" onclick="playAgain()">
+</fieldset>
+
+<fieldset>
+    <input type="button" class="btn" value="Force update / start updating" onclick="startUpdating()">
+    <input type="button" class="btn" value="Stop updating" onclick="stopUpdating()">
+</fieldset>
+
+<footer>
+    <p class="second">@Alessandro, 2020(The year world ended)</p>
+</footer>
+
+</body>
+</html>

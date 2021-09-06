@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body{
+            background-color: blanchedalmond;
+        }
+        #headColor{
+            color: red;
+            text-align: center;
+        }
+        #login{
+            color: blue;
+        }
+                .btn{
+            border-color: red;
+            background-color: aqua;
+            color: black;
+        }
+    </style>
+
+    <title>login</title>
+    <script>
+        function setUsername()
+        {
+            var name = document.getElementById("usernameID").value;
+            if(name.length < 5){
+                alert("Username must be 5 characters or longer.");
+                return;
+            }
+            var validLetters = /^[A-Za-z0-9_.!-'`|&%+#~^]*$/;
+            if(name.match(validLetters)){
+                document.getElementById("myForm").submit();
+            }
+            else{
+                alert("Username can use character from following string: " +
+                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.!+-*'`|&%#~^");
+                return;
+            }
+        }
+    </script>
+
+<body>
+
+<h1 id="headColor">Welcome! Ready to play "Shut The Box"?</h1>
+<h3 id="login">Login</h3>
+
+<p>In order to play game, your username is required so that we can post your score</p>
+<p>Please Enter username</p>
+<fieldset>
+    <form action="/game" onsubmit="event.preventDefault()" id="myForm" method="POST">
+        <label for="usernameID">Username</label>
+        <input type="text" id="usernameID" name="username" required>
+        <input type="submit" class="btn" name="submitButton" value="Submit" onclick="setUsername()">
+    </form>
+</fieldset>
+
+<footer>
+    <p id="login">@Alessandro, 2020(The year world ended)</p>
+</footer>
+
+</body>
+</html>
